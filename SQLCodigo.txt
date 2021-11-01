@@ -1,0 +1,95 @@
+create database Bodega;
+
+use Bodega;
+
+create table "DatosBodega"
+( 
+  Id_Bodega int not null  identity (1,1),
+  NombreBodega varchar (50) not null,
+  DireccionBodega varchar (50)not null,
+  Telefono varchar(50) not null,
+  CorreoElectronico varchar (50),
+  PRIMARY KEY (id_Bodega) 
+  )
+
+  CREATE TABLE Empleados 
+  (
+      ID_Empleado int not null  identity (1,1),
+	  ID_Bodega int not null,
+	  ApellidoPaterno varchar (50),
+	  ApellidoMaterno varchar(50),
+	  NombreEmpleado varchar(50),
+	  Puesto varchar (50),
+	  FechaContrato DateTime ,
+	  Sueldo float not null ,
+      primary key (Id_Empleado),
+	 CONSTRAINT fk_Bodega foreign key (Id_Bodega) REFERENCES DatosBodega (id_bodega)
+  )
+
+  CREATE  TABLE Producto 
+  (
+    ID_Producto varchar (50) not null primary key,
+	NombreProducto varchar (50) not null,
+	Precio float not null,
+	Disponibilidad varchar (50)not null,
+	Tipo varchar (50)not null,
+	Tamaño varchar (50) not null
+
+  )
+  CREATE TABLE PROVEEDORES 
+  (  ID_Proveedor int not null Primary key identity (1,1),
+     NombreProveedor varchar(50) not null,
+     Telefono varchar(50)not null,
+	 CorreoElectronico varchar(50) not null
+          
+  )
+   CREATE TABLE FACTURA 
+  (
+  ID_Factura varchar (50) not null primary key,
+  Fecha dateTime not null,
+  ID_Pedido int not null
+ 
+  )
+   CREATE TABLE PEDIDO
+  (
+    ID_Pedido int not null primary key identity (1,1),
+    FechaPedido dateTime not null,
+	FechaEntregaEstimada dateTime not null,
+	Origen varchar (50) not null,
+	Destino varchar(50) not null,
+	Descripcion varchar (60) not null,
+	ID_Empleado int not null ,
+	ID_Producto varchar (50) not null,
+	ID_Proveedor int not null,
+	ID_Factura varchar (50) not null
+	CONSTRAINT fk_Empleado foreign key (ID_Empleado) REFERENCES Empleados (ID_Empleado),
+    CONSTRAINT fk_ProductoP foreign key (ID_Producto) REFERENCES Producto (ID_Producto),
+	CONSTRAINT fk_Proveedor foreign key (ID_Proveedor) REFERENCES Proveedores (ID_Proveedor),
+	CONSTRAINT fk_Factura foreign key (ID_Factura) REFERENCES Factura (ID_Factura)
+  )
+ 
+  CREATE TABLE CatalogoUnidad
+  (
+     ID_UnidadMedida varchar (50) not null Primary key,
+	 Descripcion varchar (50) not null
+  
+  )
+  
+  CREATE TABLE DetalleFactura
+  (
+     ID_DetalleFactura int not null primary key,
+     ID_Producto varchar (50) not null,
+	 Cantidad float not null,
+	 PrecioUnitario float not null,
+	 ID_UnidadMedida varchar (50) not null,
+	 ImporteTotal float not null
+	 CONSTRAINT fk_UnidadMedida foreign key (ID_UnidadMedida) REFERENCES CatalogoUnidad (ID_UnidadMedida),
+	 CONSTRAINT fk_Producto foreign key (ID_Producto) REFERENCES Producto (ID_Producto)
+  )
+ /* CONSTRAINT fk_Pedido foreign key (ID_Pedido) REFERENCES PEDIDO (ID_Pedido)
+ */
+ alter table Factura
+ add constraint fk_Pedido
+ foreign key (ID_Pedido)
+ references Pedido (ID_Pedido);
+  
